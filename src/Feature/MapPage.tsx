@@ -30,16 +30,14 @@ export default function MapPage() {
         setSearchQuery(debounced);
     }, [debounced, setSearchQuery]);
 
-    // تابع برگشت به نمای اولیه
     const resetView = () => {
         setSelectedStation(null);
         setInputValue('');
     };
 
     return (
-        <div className="relative h-screen w-full bg-gray-100 overflow-hidden">
+        <div className="relative w-full bg-gray-100 overflow-hidden" style={{ height: 'calc(100vh - 4rem)' }}>
 
-            {/* دکمه باز کردن سایدبار (وقتی بسته است) */}
             {!isSidebarOpen && (
                 <button
                     onClick={() => setIsSidebarOpen(true)}

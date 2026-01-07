@@ -4,6 +4,7 @@ import { useUserStore } from "./store/useUserStore";
 import HomePage from "./Home";
 import UserPage from "./routes/UsersPage";
 import MapPage from "./Feature/MapPage";
+import AboutPage from "./routes/About";
 
 export default function App() {
   const name = useUserStore((state: any) => state.name);
@@ -14,6 +15,7 @@ export default function App() {
         <NavLink to="/" className="hover:underline">Home</NavLink>
         <NavLink to="/users" className="hover:underline">Users</NavLink>
         <NavLink to="/map" className="hover:underline">Map</NavLink>
+        <NavLink to="/about" className="hover:underline">About</NavLink>
         <span className="ml-auto font-bold">Hi {name}!</span>
       </nav>
 
@@ -22,6 +24,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/users" element={<UserPage />} />
           <Route path="/map" element={<MapPage />} />
+          <Route path="/about" element={<AboutPage />} />
 
         </Routes>
       </main>

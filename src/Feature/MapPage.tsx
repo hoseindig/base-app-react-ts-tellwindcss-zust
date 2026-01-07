@@ -71,6 +71,8 @@ export default function MapPage() {
                 <MapController
                     center={selectedStation ? [selectedStation.lat, selectedStation.lng] : GERMANY_CENTER}
                     zoom={selectedStation ? 13 : INITIAL_ZOOM}
+                    selectedStation={selectedStation}
+                    isSidebarOpen={isSidebarOpen}
                 />
 
                 <StationMarkers

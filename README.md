@@ -43,6 +43,35 @@ export default defineConfig([
 ])
 ```
 
+---
+
+## Quick commands
+
+- Install: `npm install`
+- Dev server: `npm run dev`
+- Build: `npm run build`
+- Lint: `npm run lint`
+- Run tests (Vitest): `npm run test`
+- Watch tests: `npm run test:watch`
+- Test coverage: `npm run test:coverage`
+
+## Testing notes
+
+We use Vitest + Testing Library for unit tests. To run tests locally:
+
+1. `npm install`
+2. `npm run test`
+
+To run tests in watch mode:
+
+- `npm run test:watch`
+
+## Map behavior
+
+- Click a station marker to select it.
+- If the sidebar is closed and a station is selected, the map will smoothly fly to the station and open a popup showing station info.
+
+---
 You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
 ```js

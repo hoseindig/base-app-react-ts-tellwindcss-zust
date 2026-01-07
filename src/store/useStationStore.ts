@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface Station {
+export interface Station {
     id: number;
     name: string;
     city: string;

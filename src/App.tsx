@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom"; // BrowserRouter را از ا�
 import { useUserStore } from "./store/useUserStore";
 import HomePage from "./Home";
 import UserPage from "./routes/UsersPage";
+import MapView from "./components/MapView";
 
 export default function App() {
   // برای حل خطای Implicit Any، تایپ state را مشخص کردیم
@@ -17,6 +18,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/users" element={<UserPage />} />
+        <Route path="/map" element={<MapView />} />
+
         {/* سایر مسیرها فقط با کامپوننت Route اینجا اضافه می‌شوند */}
       </Routes>
     </>

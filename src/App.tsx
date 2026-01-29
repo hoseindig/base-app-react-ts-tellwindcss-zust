@@ -5,7 +5,8 @@ import MapPage from "./Feature/MapPage";
 import AboutPage from "./routes/About";
 import NotFoundPage from "./routes/NotFound";
 import TestPage from "./routes/Testpage";
-
+import IrregularVerbQuiz from "./pages/IrregularVerbQuiz";
+import IrregularVerbList from "./pages/IrregularVerbList";
 
 export default function App() {
   const name = useUserStore((state: any) => state.name);
@@ -13,9 +14,22 @@ export default function App() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 h-16 flex items-center gap-4 p-4 bg-slate-800 text-white z-50">
-        <NavLink to="/" className="hover:underline">Map</NavLink>
-        <NavLink to="/about" className="hover:underline">About</NavLink>
-        <NavLink to="/test" className="hover:underline">Test</NavLink>
+        <NavLink to="/" className="hover:underline">
+          Map
+        </NavLink>
+        <NavLink to="/about" className="hover:underline">
+          About
+        </NavLink>
+        <NavLink to="/test" className="hover:underline">
+          Test
+        </NavLink>
+
+        <NavLink to="/IrregularVerbQuiz" className="hover:underline">
+          IrregularVerbQuiz
+        </NavLink>
+        <NavLink to="/IrregularVerbList" className="hover:underline">
+          IrregularVerbList
+        </NavLink>
         <span className="ml-auto font-bold">Hi {name}!</span>
       </nav>
 
@@ -24,6 +38,8 @@ export default function App() {
           <Route path="/" element={<MapPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/test" element={<TestPage />} />
+          <Route path="/IrregularVerbQuiz" element={<IrregularVerbQuiz />} />
+          <Route path="/IrregularVerbList" element={<IrregularVerbList />} />
           {/* Fallback for unknown routes */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

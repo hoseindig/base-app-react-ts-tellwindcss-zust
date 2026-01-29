@@ -5,6 +5,7 @@ const STORAGE_KEY = "selectedVerbs";
 
 export default function IrregularVerbList() {
   const [selectedVerbs, setSelectedVerbs] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // بارگذاری داده‌های ذخیره شده هنگام بارگیری صفحه
   useEffect(() => {
@@ -36,6 +37,16 @@ export default function IrregularVerbList() {
     localStorage.removeItem(STORAGE_KEY);
   };
 
+  const handleSpeak = (text: string) => {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel(); // متوقف کردن صدای قبلی
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = 0.8;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
@@ -50,6 +61,16 @@ export default function IrregularVerbList() {
         )}
       </div>
 
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="جستجو کنید..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
+        />
+      </div>
+
       <table className="w-full border-collapse border">
         <thead>
           <tr className="bg-gray-100">
@@ -61,6 +82,14 @@ export default function IrregularVerbList() {
         <tbody>
           {[...IRREGULAR_VERBS]
             .sort((a, b) => (b.isPopular ? 1 : 0) - (a.isPopular ? 1 : 0))
+            .filter(
+              (v) =>
+                v.base.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                v.past.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                v.pastParticiple
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase()),
+            )
             .map((v) => (
               <tr
                 key={v.base}
@@ -72,15 +101,50 @@ export default function IrregularVerbList() {
                 }`}
               >
                 <td className="border p-2">
-                  {v.base}
-                  {/* {v.isPopular && (
-                    <span className="ml-2 text-sm bg-yellow-200 px-2 py-1 rounded">
-                      ⭐ Popular
-                    </span>
-                  )} */}
+                  <div className="flex items-center gap-2">
+                    <span>{v.base}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSpeak(v.base);
+                      }}
+                      className="text-xl hover:scale-110 transition-transform"
+                      title="تلفظ کنید"
+                    >
+                      🔊
+                    </button>
+                  </div>
                 </td>
-                <td className="border p-2">{v.past}</td>
-                <td className="border p-2">{v.pastParticiple}</td>
+                <td className="border p-2">
+                  <div className="flex items-center gap-2">
+                    <span>{v.past}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSpeak(v.past);
+                      }}
+                      className="text-xl hover:scale-110 transition-transform"
+                      title="تلفظ کنید"
+                    >
+                      🔊
+                    </button>
+                  </div>
+                </td>
+                <td className="border p-2">
+                  <div className="flex items-center gap-2">
+                    <span>{v.pastParticiple}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSpeak(v.pastParticiple);
+                      }}
+                      className="text-xl hover:scale-110 transition-transform"
+                      title="تلفظ کنید"
+                    >
+                      🔊
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
         </tbody>

@@ -90,9 +90,9 @@ export default function IrregularVerbList() {
                   .toLowerCase()
                   .includes(searchTerm.toLowerCase()),
             )
-            .map((v) => (
+            .map((v, i) => (
               <tr
-                key={v.base}
+                key={v.base + i}
                 onClick={() => handleRowClick(v.base)}
                 className={`cursor-pointer transition-colors ${
                   isSelected(v.base)

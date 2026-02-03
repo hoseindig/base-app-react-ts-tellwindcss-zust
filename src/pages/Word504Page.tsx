@@ -88,10 +88,10 @@ export default function Word504Page() {
         {/* Header */}
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-bold text-gray-900">
-            504 Essential English Words
+            Oxford 3000 Daily Words
           </h1>
           <p className="text-gray-600">
-            Master 504 high-frequency English words with daily practice
+            Practice high-frequency daily English words from A1 to B2
           </p>
         </div>
 

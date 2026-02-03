@@ -44,6 +44,39 @@ export interface DailyWords {
     generatedDate: string;
 }
 
+const DIFFICULTY_ORDER: Array<"" | "A1" | "A2" | "B1" | "B2"> = [
+    "A1",
+    "A2",
+    "B1",
+    "B2",
+    "",
+];
+
+function shuffle<T>(arr: T[]): T[] {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+}
+
+function getLearnedWordIdsFromStorage(): Set<string> {
+    try {
+        const raw = localStorage.getItem("word-504-store");
+        if (!raw) return new Set();
+        const parsed = JSON.parse(raw);
+        const progress = parsed?.state?.progress ?? {};
+        const ids = Object.values(progress)
+            .filter((p: any) => p?.learned)
+            .map((p: any) => p.wordId)
+            .filter(Boolean);
+        return new Set(ids);
+    } catch {
+        return new Set();
+    }
+}
+
 /**
  * Gets 5 random words for today's practice
  * Returns the same words throughout the day
@@ -53,11 +86,14 @@ export function getDailyWords(count = WORD504_DAILY_WORD_COUNT): string[] {
     const storageKey = `daily-words-504-${today}`;
     const saved = localStorage.getItem(storageKey);
     const desiredCount = Math.min(count, WORDS_504.length);
+    const wordIdSet = new Set(WORDS_504.map((w) => w.id));
 
     if (saved) {
         try {
             const daily: DailyWords = JSON.parse(saved);
-            if (daily?.wordIds?.length === desiredCount) {
+            const savedIds = daily?.wordIds ?? [];
+            const allIdsValid = savedIds.every((id) => wordIdSet.has(id));
+            if (savedIds.length === desiredCount && allIdsValid) {
                 return daily.wordIds;
             }
         } catch {
@@ -66,8 +102,17 @@ export function getDailyWords(count = WORD504_DAILY_WORD_COUNT): string[] {
     }
 
     // Generate new daily words
-    const shuffled = [...WORDS_504].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, desiredCount);
+    const learnedIds = getLearnedWordIdsFromStorage();
+    let candidates = WORDS_504.filter((w) => !learnedIds.has(w.id));
+    if (candidates.length < desiredCount) {
+        candidates = WORDS_504;
+    }
+
+    const ordered = DIFFICULTY_ORDER.flatMap((level) =>
+        shuffle(candidates.filter((w) => w.difficulty === level)),
+    );
+
+    const selected = ordered.slice(0, desiredCount);
     const wordIds = selected.map((w) => w.id);
 
     localStorage.setItem(
@@ -107,7 +152,7 @@ export function getWordsByCategory(category: string) {
 /**
  * Gets words by difficulty level
  */
-export function getWordsByDifficulty(difficulty: "beginner" | "intermediate" | "advanced") {
+export function getWordsByDifficulty(difficulty: "" | "A1" | "A2" | "B1" | "B2") {
     return WORDS_504.filter((w) => w.difficulty === difficulty);
 }
 

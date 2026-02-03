@@ -69,11 +69,13 @@ export default function Word504LearnMode({
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case "beginner":
+      case "A1":
         return "bg-green-100 text-green-800";
-      case "intermediate":
+      case "A2":
+        return "bg-teal-100 text-teal-800";
+      case "B1":
         return "bg-yellow-100 text-yellow-800";
-      case "advanced":
+      case "B2":
         return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -145,8 +147,14 @@ export default function Word504LearnMode({
               <p className="text-sm opacity-75">Definition</p>
               <p className="text-lg font-semibold">{currentWord.definition}</p>
               <div className="border-t border-white pt-4 mt-4">
-                <p className="text-sm mb-2 opacity-75">Example:</p>
-                <p className="text-base italic">"{currentWord.example}"</p>
+                {currentWord.example && (
+                  <>
+                    <p className="text-sm mb-2 opacity-75">Example:</p>
+                    <p className="text-base italic">
+                      "{currentWord.example}"
+                    </p>
+                  </>
+                )}
                 {/* <div className="mt-3">
                   <button
                     onClick={(e) => {

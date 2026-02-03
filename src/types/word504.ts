@@ -3,9 +3,23 @@ export interface Word504 {
     word: string;
     pronunciation?: string;
     definition?: string;
-    partOfSpeech?: "noun" | "verb" | "adjective" | "adverb" | "preposition" | "conjunction" | string;
+    partOfSpeech?:
+        | ""
+        | "noun"
+        | "verb"
+        | "adjective"
+        | "adverb"
+        | "preposition"
+        | "conjunction"
+        | "pronoun"
+        | "determiner"
+        | "modal"
+        | "article"
+        | "interjection"
+        | "number"
+        | string;
     example?: string;
-    difficulty?: "beginner" | "intermediate" | "advanced";
+    difficulty?: "" | "A1" | "A2" | "B1" | "B2";
     category?: string;
     translation?: string; // Persian translation
 }

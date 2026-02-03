@@ -12,6 +12,7 @@ import {
 import Word504QuizMode from "../components/Word504/Word504QuizMode";
 import Word504LearnMode from "../components/Word504/Word504LearnMode";
 import Word504Statistics from "../components/Word504/Word504Statistics";
+import { WORD504_DAILY_WORD_COUNT } from "../config/word504Config";
 
 type PageMode = "learn" | "quiz" | "statistics";
 
@@ -30,7 +31,7 @@ export default function Word504Page() {
 
   useEffect(() => {
     // Load daily words on component mount
-    const words = getDailyWords(5);
+    const words = getDailyWords(WORD504_DAILY_WORD_COUNT);
     setDailyWordIds(words);
     setLoading(false);
   }, []);

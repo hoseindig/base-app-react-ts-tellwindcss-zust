@@ -24,6 +24,7 @@ export default function Word504LearnMode({
   }
 
   const currentWord = words[currentWordIndex];
+
   const isLearned = learnedWordIds.has(currentWord.id);
   const [translations, setTranslations] = useState<Record<string, string>>({});
   const [loadingTranslation, setLoadingTranslation] = useState(false);
@@ -146,7 +147,7 @@ export default function Word504LearnMode({
               <div className="border-t border-white pt-4 mt-4">
                 <p className="text-sm mb-2 opacity-75">Example:</p>
                 <p className="text-base italic">"{currentWord.example}"</p>
-                <div className="mt-3">
+                {/* <div className="mt-3">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -164,7 +165,7 @@ export default function Word504LearnMode({
                       {translations[currentWord.id]}
                     </p>
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

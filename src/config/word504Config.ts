@@ -1,0 +1,1 @@
+export const WORD504_DAILY_WORD_COUNT = 150;

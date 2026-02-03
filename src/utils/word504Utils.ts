@@ -1,4 +1,5 @@
 import { WORDS_504 } from "../data/words504";
+import { WORD504_DAILY_WORD_COUNT } from "../config/word504Config";
 
 // Cached in-memory copy of public JSON (lazy-loaded)
 let _publicWordsCache: Record<string, any> | null = null;
@@ -47,19 +48,26 @@ export interface DailyWords {
  * Gets 5 random words for today's practice
  * Returns the same words throughout the day
  */
-export function getDailyWords(count = 5): string[] {
+export function getDailyWords(count = WORD504_DAILY_WORD_COUNT): string[] {
     const today = getTodayKey();
     const storageKey = `daily-words-504-${today}`;
     const saved = localStorage.getItem(storageKey);
+    const desiredCount = Math.min(count, WORDS_504.length);
 
     if (saved) {
-        const daily: DailyWords = JSON.parse(saved);
-        return daily.wordIds;
+        try {
+            const daily: DailyWords = JSON.parse(saved);
+            if (daily?.wordIds?.length === desiredCount) {
+                return daily.wordIds;
+            }
+        } catch {
+            // fall through to regenerate
+        }
     }
 
     // Generate new daily words
     const shuffled = [...WORDS_504].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, Math.min(count, WORDS_504.length));
+    const selected = shuffled.slice(0, desiredCount);
     const wordIds = selected.map((w) => w.id);
 
     localStorage.setItem(

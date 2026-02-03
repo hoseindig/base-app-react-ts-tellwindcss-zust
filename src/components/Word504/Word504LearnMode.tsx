@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Word504 } from "../../data/words504";
+import { getPublicWordById } from "../../utils/word504Utils";
 
 interface Word504LearnModeProps {
   words: Word504[];
@@ -24,12 +25,31 @@ export default function Word504LearnMode({
 
   const currentWord = words[currentWordIndex];
   const isLearned = learnedWordIds.has(currentWord.id);
+  const [translations, setTranslations] = useState<Record<string, string>>({});
+  const [loadingTranslation, setLoadingTranslation] = useState(false);
 
   const handleMarkAsLearned = () => {
     const newLearned = new Set(learnedWordIds);
     newLearned.add(currentWord.id);
     setLearnedWordIds(newLearned);
     onWordLearned(currentWord.id);
+  };
+
+  const showTranslation = async (wordId: string) => {
+    if (translations[wordId]) return;
+    setLoadingTranslation(true);
+    try {
+      const pub = await getPublicWordById(wordId);
+      if (pub && pub.translation) {
+        setTranslations((s) => ({ ...s, [wordId]: pub.translation }));
+      } else {
+        setTranslations((s) => ({ ...s, [wordId]: "(translation not found)" }));
+      }
+    } catch (e) {
+      setTranslations((s) => ({ ...s, [wordId]: "(error)" }));
+    } finally {
+      setLoadingTranslation(false);
+    }
   };
 
   const handleNext = () => {
@@ -126,6 +146,25 @@ export default function Word504LearnMode({
               <div className="border-t border-white pt-4 mt-4">
                 <p className="text-sm mb-2 opacity-75">Example:</p>
                 <p className="text-base italic">"{currentWord.example}"</p>
+                <div className="mt-3">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      showTranslation(currentWord.id);
+                    }}
+                    className="mt-2 px-3 py-1 bg-white text-teal-700 rounded-lg font-semibold"
+                    disabled={loadingTranslation}
+                  >
+                    {translations[currentWord.id]
+                      ? "نمایش ترجمه"
+                      : "نمایش ترجمه (فارسی)"}
+                  </button>
+                  {translations[currentWord.id] && (
+                    <p className="text-sm mt-2 text-white/90">
+                      {translations[currentWord.id]}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>

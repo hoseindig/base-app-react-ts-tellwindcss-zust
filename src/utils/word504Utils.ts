@@ -1,5 +1,39 @@
 import { WORDS_504 } from "../data/words504";
 
+// Cached in-memory copy of public JSON (lazy-loaded)
+let _publicWordsCache: Record<string, any> | null = null;
+
+/**
+ * Loads `public/data/words504.json` once and caches it in memory.
+ */
+export async function loadPublicWords(): Promise<Record<string, any>> {
+    if (_publicWordsCache) return _publicWordsCache;
+
+    try {
+        const res = await fetch("/data/words504.json");
+        if (!res.ok) throw new Error("Failed to fetch words504.json");
+        const arr = await res.json();
+        const map: Record<string, any> = {};
+        arr.forEach((w: any) => {
+            if (w && w.id) map[w.id] = w;
+        });
+        _publicWordsCache = map;
+        return map;
+    } catch (err) {
+        console.error("loadPublicWords error:", err);
+        _publicWordsCache = {};
+        return _publicWordsCache;
+    }
+}
+
+/**
+ * Get Persian translation (or full public word object) by id from public JSON.
+ */
+export async function getPublicWordById(id: string) {
+    const map = await loadPublicWords();
+    return map[id];
+}
+
 export function getTodayKey(): string {
     return new Date().toISOString().slice(0, 10);
 }

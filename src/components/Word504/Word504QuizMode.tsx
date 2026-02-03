@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Word504 } from "../../data/words504";
+import { getPublicWordById } from "../../utils/word504Utils";
 
 interface Word504QuizModeProps {
   words: Word504[];
@@ -22,6 +23,8 @@ export default function Word504QuizMode({
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [translations, setTranslations] = useState<Record<string, string>>({});
+  const [loadingTranslation, setLoadingTranslation] = useState(false);
 
   useEffect(() => {
     generateQuestions();
@@ -89,6 +92,23 @@ export default function Word504QuizMode({
     );
 
     onComplete(correctCount, questions.length);
+  };
+
+  const showTranslation = async (wordId: string) => {
+    if (translations[wordId]) return;
+    setLoadingTranslation(true);
+    try {
+      const pub = await getPublicWordById(wordId);
+      if (pub && pub.translation) {
+        setTranslations((s) => ({ ...s, [wordId]: pub.translation }));
+      } else {
+        setTranslations((s) => ({ ...s, [wordId]: "(translation not found)" }));
+      }
+    } catch (e) {
+      setTranslations((s) => ({ ...s, [wordId]: "(error)" }));
+    } finally {
+      setLoadingTranslation(false);
+    }
   };
 
   if (loading) {
@@ -208,6 +228,22 @@ export default function Word504QuizMode({
           <p className="text-sm mt-2 opacity-75">
             {currentQuestion.correctWord.definition}
           </p>
+          <div className="mt-3">
+            <button
+              onClick={() => showTranslation(currentQuestion.correctWord.id)}
+              disabled={loadingTranslation}
+              className="mt-2 px-3 py-1 bg-white text-red-700 rounded-lg font-semibold"
+            >
+              {translations[currentQuestion.correctWord.id]
+                ? "نمایش ترجمه"
+                : "نمایش ترجمه (فارسی)"}
+            </button>
+            {translations[currentQuestion.correctWord.id] && (
+              <p className="text-sm mt-2">
+                {translations[currentQuestion.correctWord.id]}
+              </p>
+            )}
+          </div>
         </div>
       )}
 
